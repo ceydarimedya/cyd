@@ -3,7 +3,11 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>site</title>
+<title>❤️</title>
+
+<!-- Google Fonts Poppins -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
 <style>
   html, body {
     margin: 0;
@@ -11,11 +15,13 @@
     height: 100%;
     overflow-x: hidden;
     background: #87ceeb;
+    font-family: 'Poppins', cursive;
   }
   body {
     display: flex;
     align-items: flex-end;
     justify-content: flex-start;
+    position: relative;
   }
   .container {
     position: relative;
@@ -49,27 +55,24 @@
     pointer-events: none;
     z-index: 3;
   }
-#message {
-  position: fixed;
-  top: 30%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: #010101;
-  padding: 20px 40px;
-  border-radius: 10px;
-  font-size: 36px;
-  font-family: 'Poppins', cursive;
-  opacity: 0; /* Başlangıçta görünmez */
-  z-index: 10;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-  pointer-events: none; /* Yazının tıklanmasını engelle */
-  transition: opacity 0.3s linear; /* Geçiş yumuşaklığı */
-}
-
-#message.show {
-  opacity: 1;
-}
-
+  #message {
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #010101;
+    padding: 20px 40px;
+    border-radius: 10px;
+    font-size: 30px;
+    opacity: 0;
+    z-index: 10;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    pointer-events: none;
+    transition: opacity 0.3s linear;
+  }
+  #message.show {
+    opacity: 1;
+  }
   @keyframes floatUp {
     0% {
       transform: translateY(0) scale(1);
@@ -80,71 +83,72 @@
       opacity: 0;
     }
   }
+
+  /* Başlat butonu stili */
+  #startButton {
+    position: fixed;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 15px 30px;
+    font-size: 20px;
+    font-family: 'Poppins', cursive;
+    cursor: pointer;
+    border: none;
+    background-color: #333;
+    color: white;
+    border-radius: 10px;
+    z-index: 20;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  }
 </style>
 </head>
 <body>
-    <div id="message">❤️Seni seviyorum Burak❤️ </div>
-  <div class="container">
-    <div id="road"></div>
-    <img
-      id="car"
-      src="carr.png"
-      alt="Araba"
-    />
-  </div>
 
-  <!-- Egzoz sesi için audio elementi -->
-  <audio id="exhaustSound" src="exhaust.mp3" loop></audio>
+<div id="message">❤️Seni seviyorum Burak❤️</div>
+
+<div class="container">
+  <div id="road"></div>
+  <img id="car" src="carr.png" alt="Araba" />
+</div>
+
+<!-- Egzoz sesi -->
+<audio id="exhaustSound" src="exhaust.mp3" loop></audio>
+
+<!-- Başlat butonu -->
+<button id="startButton">Başlat</button>
 
 <script>
-    let messageShown = false;
-
-function moveCar() {
-  pos += speed;
-  if (pos > maxPos) {
-    pos = -300;
-  }
-
-  const message = document.getElementById('message');
-
-  // Araba ekranda görünmeye başlarken (pos 0'dan büyük) yazı yavaşça görünür
-  if (pos > 0 && pos < window.innerWidth / 2) {
-    // pos 0 ile ekranın yarısı arasında opacity 0 → 1 arasında lineer artar
-    let opacity = (pos) / (window.innerWidth / 2);
-    if (opacity > 1) opacity = 1;
-    message.style.opacity = opacity;
-  }
-  // Araba ekranın ortasından sonra giderken yazı yavaşça kaybolur
-  else if (pos >= window.innerWidth / 2 && pos < window.innerWidth) {
-    // pos ekran yarısı ile son arasında opacity 1 → 0 arasında lineer azalır
-    let opacity = 1 - (pos - window.innerWidth / 2) / (window.innerWidth / 2);
-    if (opacity < 0) opacity = 0;
-    message.style.opacity = opacity;
-  }
-  else {
-    message.style.opacity = 0;
-  }
-
-  car.style.left = pos + 'px';
-}
-
-
   const car = document.getElementById('car');
-  const container = document.querySelector('.container');
   const exhaustSound = document.getElementById('exhaustSound');
-
-  // Sayfa yüklendiğinde sesi çal
-  window.addEventListener('click', () => {
-  exhaustSound.volume = 0.3;
-  exhaustSound.play().catch(() => {
-    console.log("Ses oynatılırken hata oluştu.");
-  });
-}, { once: true });
-
+  const message = document.getElementById('message');
+  const startButton = document.getElementById('startButton');
 
   let pos = -300;
   const speed = 4;
   const maxPos = window.innerWidth + 300;
+
+  function moveCar() {
+    pos += speed;
+    if (pos > maxPos) {
+      pos = -300;
+    }
+
+    // Mesaj opacity kontrolü
+    if (pos > 0 && pos < window.innerWidth / 2) {
+      let opacity = pos / (window.innerWidth / 2);
+      if (opacity > 1) opacity = 1;
+      message.style.opacity = opacity;
+    } else if (pos >= window.innerWidth / 2 && pos < window.innerWidth) {
+      let opacity = 1 - (pos - window.innerWidth / 2) / (window.innerWidth / 2);
+      if (opacity < 0) opacity = 0;
+      message.style.opacity = opacity;
+    } else {
+      message.style.opacity = 0;
+    }
+
+    car.style.left = pos + 'px';
+  }
 
   function createHeart() {
     const heart = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -157,29 +161,36 @@ function moveCar() {
       19.58 3 22 5.42 22 8.5
       c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
     `;
-
     const carRect = car.getBoundingClientRect();
-
     const heartX = carRect.left - 12;
     const heartY = carRect.top + carRect.height / 2 - 12;
-
     heart.style.left = heartX + 'px';
     heart.style.top = heartY + 'px';
-
     document.body.appendChild(heart);
-
     setTimeout(() => {
       heart.remove();
     }, 2500);
   }
 
+  let animationId;
   function animate() {
     moveCar();
-    requestAnimationFrame(animate);
+    animationId = requestAnimationFrame(animate);
   }
-  animate();
+
+  // Başlat butonuna tıklandığında ses başlatılır ve animasyon başlar
+  startButton.addEventListener('click', () => {
+    exhaustSound.volume = 0.3;
+    exhaustSound.play().catch(() => {
+      console.log("Ses oynatılırken hata oluştu.");
+    });
+
+    animate();
+    startButton.style.display = 'none'; // Butonu gizle
+  });
 
   setInterval(createHeart, 350);
 </script>
+
 </body>
 </html>
